@@ -1,4 +1,6 @@
 ## <div align = "center"> Starve-Free Readers Writers Problem (CSN-232) </div>
+#### <div align = "right"> Md Junaid Mahmood (19116040) </div>
+
 One of the common strategies that is used for avoiding starvation in any scheduling algorithms is to give a higher priority to a job coming first. In other words, this means that a strategy like that of a *First Come First Serve (FCFS)* is followed.
 
 Similarly, for providing a starvation free solution to Readers-Writers problem, approach that was followed is like that of a *First Come First Serve (FCFS)* strategy. In the given Readers-Writers problem, it is considered that multiple Reader processes can access the critical section simultaneously. However, only one Writer process can be allowed to access the critical section at a time. In addition, a Reader process and a Writer process cannot access the critical section simultaneously.
@@ -41,4 +43,4 @@ Now the logic behind the algorithm provided for starvation free solution to Read
 
 ---
 
-**Readers-Writers-Problem.cpp** file in this repository contains the Pseudo Code for the starvation free solution to the Readers Writers Problem.
+**Readers-Writers-Problem** folder in this repository contains the Pseudo Code for the starvation free solution to the Readers Writers Problem.
