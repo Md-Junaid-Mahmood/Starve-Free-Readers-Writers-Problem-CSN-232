@@ -38,3 +38,7 @@ Now the logic behind the algorithm provided for starvation free solution to Read
   + The `active_writer_count` variable is used for checking whether any Writer process is inside critical section or not. If a Writer process is inside critical section, then it is set to 1. Otherwise, it is 0.
   + The `primary_writer_count` variable stores the number of waiting Writer processes that must be given access to the critical section before any Reader process can access the critical section. It is initialised to 0.
   + The `waiting_writer_count` variable stores the number of Writer processes that are waiting for the access to the critical section. They will gain access only when the group of Reader processes that came before it completes their execution. It is initialised to 0. 
+
+---
+
+**Readers-Writers-Problem.cpp** file in this repository contains the Pseudo Code for the starvation free solution to the Readers Writers Problem.
