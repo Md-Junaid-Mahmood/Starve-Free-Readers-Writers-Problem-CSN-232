@@ -1,0 +1,10 @@
+The purpose of the directory is to store the JAVA Code corresponding to the implementation of the algorithm proposed for the starvation free solution to the classical synchronisation Readers Writers Problem.
+
+---
+
+Description about the content of each file is mentioned below:
+  + **Process.java** is the central JAVA Program, which contains the main method. This program is responsible for creating threads corresponding to the Reader Processes and Writer Processes which are ready to run. The exact moment at which these threads start running depends upon the scheduler of the Operating System. As of now details about the threads are hard-coded into the program. However, it can be easily modified to consider inputs from the user at runtime.
+  + **ProcessController.java** is the JAVA Program that is responsible for initialising variables and instantiating semaphores to the required state as described in the algorithm. This program also provides suitable methods to alter the value of the variables.
+  + **Semaphore.java** is the JAVA Program that implements the *semaphores*. Each object of class Semaphore has an attribute known as *value* and this attribute can be modified using `waiting()` and `signal()` methods.
+  + **ReaderProcess.java** is the JAVA Program that extends Thread class and overrides `run()` method. The overridden `run()` method specifies the general behaviour of a Reader Process before and after accessing the Critical Section of the Code. This behaviour is as per the guidelines highlighted in the algorithm. Multiple Reader Processes can be allowed inside the Critical Section at a time.
+  + **WriterProcess.java** is the JAVA Program that extends Thread class and overrides `run()` method. The overridden `run()` method specifies the general behaviour of a Writer Process before and after accessing the Critical Section of the Code. This behaviour is as per the guidelines highlighted in the algorithm. Only single Writer Process can be allowed inside the Critical Section at a time.
