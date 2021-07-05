@@ -43,4 +43,4 @@ Now the logic behind the algorithm provided for starvation free solution to Read
 
 ---
 
-**Readers-Writers Problem** folder in this repository contains the Pseudo Code for the starvation free solution to the Readers Writers Problem.
+**Readers-Writers Problem** folder in this repository contains the Pseudo Code as well working code (written in JAVA programming language) for the starvation free solution to the Readers Writers Problem.
