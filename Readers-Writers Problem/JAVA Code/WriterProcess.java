@@ -21,49 +21,57 @@ public class WriterProcess extends Thread{
     public void run() {
         try {
             mutex.acquire();
-            System.out.println(this.getName() + " acquired mutex Initial");
+            System.out.println(this.getName() + " has acquired mutex Initial");
 
             if(TemplateOfProcess.getActiveReader() + TemplateOfProcess.getWaitingReader() == 0){
                 if(TemplateOfProcess.getActiveWriter() == 0){
                     TemplateOfProcess.setActiveWriter(1);;
-                    
-                    System.out.println(this.getName() + " became active writer");
+                    System.out.println(this.getName() + " has become active writer");
                     writer_allowed.release();
                 }else{
                     TemplateOfProcess.incPrimaryWriter();
-                    System.out.println(this.getName() + " became primary writer");
+                    System.out.println(this.getName() + " has become primary writer");
                 }
             }else{
                 TemplateOfProcess.incWaitingWriter();
-                System.out.println(this.getName() + " became waiting writer");
+                System.out.println(this.getName() + " has become waiting writer");
             }
-            System.out.println(this.getName() + " released mutex Initial");
+            System.out.println(this.getName() + " has released mutex Initial");
             mutex.release();
-
             writer_allowed.acquire();
-            Shared.sharedCount++;
-            System.out.println("Writer Entry: " + this.getName() + " " + Shared.sharedCount);
-            writer_finished.release();
 
+            System.out.println("\tWriter Entry Into Critical Section: " + this.getName());
+            System.out.println("\tValue read by " + this.getName() + " " + Shared.sharedCount);
+            Shared.sharedCount++;
+            System.out.println("\tValue modified by " + this.getName() + " " + Shared.sharedCount);
+            System.out.println("\tWriter Exit From Critical Section: " + this.getName());
+
+            writer_finished.release();
             mutex.acquire();
-            System.out.println(this.getName() + " acquired mutex Final");
+            System.out.println(this.getName() + " has acquired mutex Final");
             while(TemplateOfProcess.getPrimaryWriter() > 0){
+                writer_finished.acquire();
+                System.out.println(this.getName() + " has released Primary Writer");
                 writer_allowed.release();
                 TemplateOfProcess.decPrimaryWriter();
-                writer_finished.acquire();
-                System.out.println(this.getName() + " released Primary Writer");
             }
+            writer_finished.acquire();
+            writer_finished.release();
         
             TemplateOfProcess.setActiveWriter(0);
         
+            if(TemplateOfProcess.getWaitingReader() == 0){
+                System.out.println(this.getName() + " do not have any waiting readers to release");
+            }else{
+                System.out.println(this.getName() + " has released waiting readers");
+            }
             while(TemplateOfProcess.getWaitingReader() > 0){
                 reader_allowed.release();
                 TemplateOfProcess.incActiveReader();
                 TemplateOfProcess.decWaitingReader();
-                System.out.println(this.getName() + " released waiting readers");
             }
             
-            System.out.println(this.getName() + " released mutex Final");
+            System.out.println(this.getName() + " has released mutex Final");
             mutex.release();
         }catch(Exception e) {
             System.out.println(e);

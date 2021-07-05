@@ -21,35 +21,38 @@ public class ReaderProcess extends Thread{
     public void run() {
         try{
             mutex.acquire();
-            System.out.println(this.getName() + " acquired mutex Initial");
+            System.out.println(this.getName() + " has acquired mutex Initial");
             
             if(TemplateOfProcess.getActiveWriter() + TemplateOfProcess.getPrimaryWriter() + TemplateOfProcess.getWaitingWriter() == 0){
                 TemplateOfProcess.incActiveReader();
-                System.out.println(this.getName() + " became active");
+                System.out.println(this.getName() + " has become active reader");
                 reader_allowed.release();
             }else{
                 TemplateOfProcess.incWaitingReader();
-                System.out.println(this.getName() + " is waiting");
+                System.out.println(this.getName() + " has become waiting reader");
             }
 
-            System.out.println(this.getName() + " released mutex Initial");
+            System.out.println(this.getName() + " has released mutex Initial");
             mutex.release();
 
             reader_allowed.acquire();
 
-            System.out.println("Reader Entry: " + this.getName() + " " + Shared.sharedCount);
+            System.out.println("\tReader Entry Into Critical Section: " + this.getName());
+            System.out.println("\tValue read by " + this.getName() + " " + Shared.sharedCount);
+            System.out.println("\tReader Exit From Critical Section: " + this.getName());
 
             mutex.acquire();
-            System.out.println(this.getName() + " acquired mutex Final");
+            System.out.println(this.getName() + " has acquired mutex Final");
             TemplateOfProcess.decActiveReader();
             if(TemplateOfProcess.getActiveReader() == 0 && TemplateOfProcess.getWaitingWriter() > 0){
                 TemplateOfProcess.setActiveWriter(1);
                 writer_allowed.release();
                 TemplateOfProcess.setPrimaryWriter(TemplateOfProcess.getWaitingWriter() - 1);
                 TemplateOfProcess.setWaitingWriter(0);
-                System.out.println(this.getName() + " released mutex Final and updated active writer and primary writer");
+                System.out.println(this.getName() + " has released mutex Final and updated active writer, primary writer and waiting writer count");
+            }else{
+                System.out.println(this.getName() + " has released mutex Final and there was nothing to update for Writer Processes");
             }
-            System.out.println(this.getName() + " released mutex Final");
             mutex.release();
         }catch(Exception e){
             System.out.println(e);
