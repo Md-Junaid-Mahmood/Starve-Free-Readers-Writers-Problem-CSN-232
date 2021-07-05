@@ -27,11 +27,14 @@ void Writer(){
     wait (*mutex);
     /* Allow all primary Writer process to access critical section and complete their execution */
     while(primary_writer_count > 0){
-        signal (*writer_allowed);
-        primary_writer_count--;
         /* Wait until prior Writer process has finished execution of critical section */
         wait (*writer_finished);
+        signal (*writer_allowed);
+        primary_writer_count--;
     }
+
+    wait (*writer_finished);
+    signal (*writer_allowed);
 
     active_writer_count = 0;
 
