@@ -1,6 +1,6 @@
 public class Process{
     public static void main(String[] args) {
-        TemplateOfProcess tmp = new TemplateOfProcess();
+        ProcessController cmp = new ProcessController();
 
         ReaderProcess rd1 = new ReaderProcess("Reader1");
         ReaderProcess rd2 = new ReaderProcess("Reader2");

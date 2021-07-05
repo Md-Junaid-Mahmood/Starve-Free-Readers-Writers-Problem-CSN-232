@@ -1,5 +1,3 @@
-import java.util.concurrent.Semaphore;
-
 public class ReaderProcess extends Thread{
     Semaphore mutex;
     Semaphore reader_allowed;
@@ -11,49 +9,49 @@ public class ReaderProcess extends Thread{
     public ReaderProcess(String threadName){
         super(threadName);
         this.threadName = threadName;
-        this.mutex = TemplateOfProcess.mutex;
-        this.reader_allowed = TemplateOfProcess.reader_allowed;
-        this.writer_allowed = TemplateOfProcess.writer_allowed;
-        this.writer_finished = TemplateOfProcess.writer_finished;
+        this.mutex = ProcessController.mutex;
+        this.reader_allowed = ProcessController.reader_allowed;
+        this.writer_allowed = ProcessController.writer_allowed;
+        this.writer_finished = ProcessController.writer_finished;
     }
 
     @Override
     public void run() {
         try{
-            mutex.acquire();
+            mutex.waiting();
             System.out.println(this.getName() + " has acquired mutex Initial");
             
-            if(TemplateOfProcess.getActiveWriter() + TemplateOfProcess.getPrimaryWriter() + TemplateOfProcess.getWaitingWriter() == 0){
-                TemplateOfProcess.incActiveReader();
+            if(ProcessController.getActiveWriter() + ProcessController.getPrimaryWriter() + ProcessController.getWaitingWriter() == 0){
+                ProcessController.incActiveReader();
                 System.out.println(this.getName() + " has become active reader");
-                reader_allowed.release();
+                reader_allowed.signal();
             }else{
-                TemplateOfProcess.incWaitingReader();
+                ProcessController.incWaitingReader();
                 System.out.println(this.getName() + " has become waiting reader");
             }
 
             System.out.println(this.getName() + " has released mutex Initial");
-            mutex.release();
+            mutex.signal();
 
-            reader_allowed.acquire();
+            reader_allowed.waiting();
 
             System.out.println("\tReader Entry Into Critical Section: " + this.getName());
             System.out.println("\tValue read by " + this.getName() + " " + Shared.sharedCount);
             System.out.println("\tReader Exit From Critical Section: " + this.getName());
 
-            mutex.acquire();
+            mutex.waiting();
             System.out.println(this.getName() + " has acquired mutex Final");
-            TemplateOfProcess.decActiveReader();
-            if(TemplateOfProcess.getActiveReader() == 0 && TemplateOfProcess.getWaitingWriter() > 0){
-                TemplateOfProcess.setActiveWriter(1);
-                writer_allowed.release();
-                TemplateOfProcess.setPrimaryWriter(TemplateOfProcess.getWaitingWriter() - 1);
-                TemplateOfProcess.setWaitingWriter(0);
+            ProcessController.decActiveReader();
+            if(ProcessController.getActiveReader() == 0 && ProcessController.getWaitingWriter() > 0){
+                ProcessController.setActiveWriter(1);
+                writer_allowed.signal();
+                ProcessController.setPrimaryWriter(ProcessController.getWaitingWriter() - 1);
+                ProcessController.setWaitingWriter(0);
                 System.out.println(this.getName() + " has released mutex Final and updated active writer, primary writer and waiting writer count");
             }else{
                 System.out.println(this.getName() + " has released mutex Final and there was nothing to update for Writer Processes");
             }
-            mutex.release();
+            mutex.signal();
         }catch(Exception e){
             System.out.println(e);
         }

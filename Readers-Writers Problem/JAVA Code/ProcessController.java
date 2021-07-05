@@ -1,9 +1,9 @@
-import java.util.concurrent.Semaphore;
-
+/* For the demonstartion purpose Integer item sharedCount of class Shared is considered to be the critical Section */
 class Shared{
     public static int sharedCount = 0;
 }
-public class TemplateOfProcess {
+
+public class ProcessController {
     /* Variables for storing details of the Writers Processes */
     private static int active_writer_count;
     private static int waiting_writer_count;
@@ -19,7 +19,7 @@ public class TemplateOfProcess {
     static Semaphore writer_allowed;
     static Semaphore writer_finished;
 
-    public TemplateOfProcess(){
+    public ProcessController(){
 
         /* Initialising the Variables */
         active_writer_count = 0;
@@ -33,18 +33,11 @@ public class TemplateOfProcess {
         /* 1 means value can be incremented or decremented by one unit only */
         /* true means threads that are waiting on this semaphore will be awaken in same order as the order in which they were kept waiting */
         mutex = new Semaphore(1);
-        reader_allowed = new Semaphore(1);
-        writer_allowed = new Semaphore(1);
-        writer_finished = new Semaphore(1);
+        reader_allowed = new Semaphore(0);
+        writer_allowed = new Semaphore(0);
+        writer_finished = new Semaphore(0);
 
         /* Initialising acquiring the semaphores for reader_allowed, writer_allowed and writer_finished semaphore */
-        try {
-            reader_allowed.acquire();
-            writer_allowed.acquire();
-            writer_finished.acquire();   
-        }catch (Exception e){
-            System.out.println(e);
-        }
     }
 
     /* For increasing the needed static variables */
